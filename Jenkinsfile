@@ -8,9 +8,7 @@ pipeline {
         }
         stage('build && SonarQube analysis') {
             steps {
-                withSonarQubeEnv('SonarCloud') {
-                   
-                    }
+                withSonarQubeEnv('SonarCloud')
                 }
             }
         }
