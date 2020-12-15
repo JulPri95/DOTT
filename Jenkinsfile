@@ -1,11 +1,11 @@
 pipeline {
     agent any
     stages {
-        stage('SCM') {
-            steps {
-                git url: 'https://github.com/JulPri95/DOTT.git'
-            }
-        }
+        //stage('SCM') {
+          //  steps {
+            //    git url: 'https://github.com/JulPri95/DOTT.git'
+            //}
+        //}
         stage('SonarCloud') {
             environment {
              SCANNER_HOME = tool 'SonarQubeScanner'
