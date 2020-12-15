@@ -4,8 +4,8 @@ pipeline {
         stage('Unit Testing') {
             steps {
                 sh '''docker build -t pym . \
-                -docker run -ti -p 8000:8000 pym
-                -python test.py'''
+                - docker run -ti -p 8000:8000 pym \
+                - python test.py'''
             }
         }
         stage('SonarCloud') {
