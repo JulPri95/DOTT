@@ -1,22 +1,27 @@
 pipeline {
     agent any
-
     stages {
-        stage('Build') {
+        stage('SCM') {
             steps {
-                echo 'Building..'
+                git url: 'https://github.com/JulPri95/DOTT.git'
             }
         }
-        stage('Test') {
+        stage('build && SonarQube analysis') {
             steps {
-                echo 'Testing..'
+                withSonarQubeEnv('SonarCloud') {
+                   
+                    }
+                }
             }
         }
-        stage('Deploy') {
+        stage("Quality Gate") {
             steps {
-                echo 'Deploying....'
+                timeout(time: 1, unit: 'HOURS') {
+                    // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
+                    // true = set pipeline to UNSTABLE, false = don't
+                    waitForQualityGate abortPipeline: true
+                }
             }
         }
     }
 }
-
