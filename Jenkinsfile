@@ -3,8 +3,8 @@ pipeline {
     stages {
         stage('Unit Testing') {
             steps {
-                docker build -t pym .
-                docker run -ti -p 8000:8000 pym
+                sh docker build -t pym . \
+                sh docker run -ti -p 8000:8000 pym
                 sh python test.py
             }
         }
