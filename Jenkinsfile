@@ -1,14 +1,6 @@
 pipeline {
     agent any
     stages {
-        stage('Unit Testing') {
-            steps {
-                //sh 'sudo -S docker build -t pym . '
-                //sh 'sudo -S docker run -ti -p 8000:8000 pym'
-                sh 'cd /home/cloud_user/DOTT'
-                sh 'python tests.py'
-            }
-        }
         stage('SonarCloud') {
             environment {
              SCANNER_HOME = tool 'SonarQubeScanner'
@@ -22,6 +14,14 @@ pipeline {
                     -Dsonar.projectKey=$PROJECT_NAME \
                     -Dsonar.sources=.'''
                 }
+            }
+        }
+        stage('Unit Testing') {
+            steps {
+                //sh 'sudo -S docker build -t pym . '
+                //sh 'sudo -S docker run -ti -p 8000:8000 pym'
+                sh 'cd /home/cloud_user/DOTT'
+                sh 'python tests.py'
             }
         }
     }
