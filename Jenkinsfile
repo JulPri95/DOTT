@@ -9,8 +9,8 @@ pipeline {
         stage('SonarCloud') {
             environment {
              SCANNER_HOME = tool 'SonarQubeScanner'
-             ORGANIZATION = "julpri95-github"
-             PROJECT_NAME = "julpri95_dott"
+             ORGANIZATION = "julpri95"
+             PROJECT_NAME = "JulPri95_DOTT"
             }
             steps {
                 withSonarQubeEnv('SonarCloud') {
