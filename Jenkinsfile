@@ -1,11 +1,13 @@
 pipeline {
     agent any
     stages {
-        //stage('SCM') {
-          //  steps {
-            //    git url: 'https://github.com/JulPri95/DOTT.git'
-            //}
-        //}
+        stage('Unit Testing') {
+            steps {
+                docker build -t pym .
+                docker run -ti -p 8000:8000 pym
+                sh python test.py
+            }
+        }
         stage('SonarCloud') {
             environment {
              SCANNER_HOME = tool 'SonarQubeScanner'
