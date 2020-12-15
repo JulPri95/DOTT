@@ -5,7 +5,8 @@ pipeline {
             steps {
                 //sh 'sudo -S docker build -t pym . '
                 //sh 'sudo -S docker run -ti -p 8000:8000 pym'
-                sh 'python test.py'
+                sh 'cd /Home/cloud_user/DOTT
+                sh 'python tests.py'
             }
         }
         stage('SonarCloud') {
