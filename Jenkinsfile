@@ -56,23 +56,25 @@ pipeline {
             }
         }
         stage('Docker Run') {
-            //environment {
+            environment {
             //    PORT_ACTIVE = ' '
-            //    PORT_IS_ACTIVE = sh(returnStdout: true, script: 'sudo lsof -i:8000')
-            //}
+                PORT_IS_ACTIVE = sh(returnStdout: true, script: 'sudo lsof -i:8000')
+            }
             //when {
             //    expression { env.PORT_IS_ACTIVE = null }
             //}
             steps {
                 script {
-                    try {
-                        sh 'sudo lsof -i:8000'
+                    if (PORT_IS_ACTIVE != null) {
+                        stage ('Stage 1') {
+                            sh 'echo "Docker is already running in port 8000"'
+                        }
                     }
-                    catch (exc) {
-                        sh 'echo "Container already running in Port"'
-                        throw exc
+                    else {
+                        stage ('Stage 2') {
+                            sh 'sudo docker run -d -p 8000:8000 pym'
+                        }
                     }
-                    sh 'sudo docker run -d -p 8000:8000 pym'
                 }
                 //sh 'echo "$PORT_IS_ACTIVE"' 
                 //sh 'sudo docker build -t pym . '
