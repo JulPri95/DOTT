@@ -38,7 +38,7 @@ pipeline {
                 expression { env.PORT_IS_ACTIVE == null }
             }
             steps { 
-                sh 'echo "$PORT_IS_ACTIVE"'
+                sh 'echo "$PORT_IS_ACTIVE"' 
                 sh 'sudo docker build -t pym . '
                 sh 'sudo docker run -d -p 8000:8000 pym'    
                 //sh 'cd /home/cloud_user/DOTT'
