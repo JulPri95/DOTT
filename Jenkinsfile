@@ -70,7 +70,7 @@ pipeline {
                             //sh 'echo "Docker is already running in port 8000"'
                         sh 'sudo lsof -i:8000'
                     }
-                    catch {
+                    catch (exc) {
                     //else {
                         sh 'sudo docker run -d -p 8000:8000 pym'
                     }
