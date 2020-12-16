@@ -18,6 +18,8 @@ pipeline {
         }
         stage('Unit Testing') {
             steps {
+                portActive = sh(returnStdout: true, script: 'sudo lsof -i:8000')
+                sh 'echo portActive'
                 sh 'sudo docker build -t pym . '
                 sh 'sudo docker run -d -p 8000:8000 pym'
                 sh 'cd /home/cloud_user/DOTT'
