@@ -29,7 +29,13 @@ pipeline {
        //         sh 'sudo docker run -d -p 8000:8000 pym'
        //     }
        // }
-        stage('Unit Testing') {
+        stage ( 'Unit Testing') {
+            steps {
+                sh 'cd /home/cloud_user/DOTT;
+                sh 'python tests.py'
+            }
+        }
+        stage('Docker Build') {
             environment {
                 //PORT_ACTIVE = ' '
                 PORT_IS_ACTIVE = sh(returnStdout: true, script: 'sudo lsof -i:8000')
