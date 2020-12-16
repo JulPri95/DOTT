@@ -31,7 +31,7 @@ pipeline {
        // }
         stage ( 'Unit Testing') {
             steps {
-                sh 'cd /home/cloud_user/DOTT;
+                sh 'cd /home/cloud_user/DOTT'
                 sh 'python tests.py'
             }
         }
