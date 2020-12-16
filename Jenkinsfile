@@ -31,13 +31,15 @@ pipeline {
        // }
         stage ( 'Unit Testing' ) {
             steps {
-                try {
-                    sh 'cd /home/cloud_user/DOTT'
-                    sh 'python tests.py'
-                }
-                catch (exc) {
-                    echo 'Unit tests failed'
-                    throw
+                script {
+                    try {
+                        sh 'cd /home/cloud_user/DOTT'
+                        sh 'python tests.py'
+                    }
+                    catch (exc) {
+                            echo 'Unit tests failed'
+                            throw
+                    }
                 }
                 //sh 'cd /home/cloud_user/DOTT'
                 //sh 'python tests.py'
