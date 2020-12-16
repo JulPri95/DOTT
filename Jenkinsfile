@@ -35,21 +35,27 @@ pipeline {
                 sh 'python tests.py'
             }
         }
-        stage('Docker Build') {
-            environment {
+        //stage('Docker Build') {
+        //    environment {
                 //PORT_ACTIVE = ' '
-                PORT_IS_ACTIVE = sh(returnStdout: true, script: 'sudo lsof -i:8000')
-            }
-            when {
-                expression { env.PORT_IS_ACTIVE = null }
-            }
-            steps { 
-                sh 'echo "$PORT_IS_ACTIVE"' 
-                sh 'sudo docker build -t pym . '
-                sh 'sudo docker run -d -p 8000:8000 pym'    
+        //        PORT_IS_ACTIVE = sh(returnStdout: true, script: 'sudo lsof -i:8000')
+        //    }
+        //    when {
+        //        expression { env.PORT_IS_ACTIVE = null }
+        //    }
+        //    steps { 
+        //        sh 'echo "$PORT_IS_ACTIVE"' 
+        //        sh 'sudo docker build -t pym . '
+        //        sh 'sudo docker run -d -p 8000:8000 pym'    
                 //sh 'cd /home/cloud_user/DOTT'
                 //sh 'python tests.py'
-            }
+       //     }
+       // }
+    }
+    post { 
+        always { 
+            sh 'sudo docker build -t pym .'
+            sh 'sudo docker run -d -p 8000:8000 pym'
         }
     }
 }
