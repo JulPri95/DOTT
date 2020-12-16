@@ -38,7 +38,6 @@ pipeline {
                     }
                     catch (exc) {
                             echo 'Unit tests failed'
-                            throw
                     }
                 }
                 //sh 'cd /home/cloud_user/DOTT'
