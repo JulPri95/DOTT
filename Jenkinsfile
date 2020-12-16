@@ -21,7 +21,7 @@ pipeline {
                 PORT_ACTIVE = sh(returnStdout: true, script: 'sudo lsof -i:8000')
             }
             when {
-                expression { env.PORT_ACTIVE != null }
+                expression { env.PORT_ACTIVE = null }
             }
             steps {
                 sh 'echo "$PORT_ACTIVE"'
