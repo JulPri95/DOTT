@@ -46,12 +46,11 @@ pipeline {
             steps {
                 script {
                     try {
-                       sh 'docker image inspect pym:latest'
+                       sh 'sudo docker image inspect pym:latest'
                     }
                     catch (exc) {
                         sh 'echo "Image does not exist yet"'
                         sh 'sudo docker build -t pym .'
-                        throw exc
                     }
                 }
             }
