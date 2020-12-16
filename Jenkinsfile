@@ -47,7 +47,6 @@ pipeline {
                 script {
                     try {
                        docker image inspect pym:latest
-                       }
                     }
                     catch (exc) {
                         sh 'echo "Docker Image already exists"'
