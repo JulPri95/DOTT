@@ -29,10 +29,18 @@ pipeline {
        //         sh 'sudo docker run -d -p 8000:8000 pym'
        //     }
        // }
-        stage ( 'Unit Testing') {
+        stage ( 'Unit Testing' ) {
             steps {
-                sh 'cd /home/cloud_user/DOTT'
-                sh 'python tests.py'
+                try {
+                    sh 'cd /home/cloud_user/DOTT'
+                    sh 'python tests.py'
+                }
+                catch (exc) {
+                    echo 'Unit tests failed'
+                    throw
+                }
+                //sh 'cd /home/cloud_user/DOTT'
+                //sh 'python tests.py'
             }
         }
         //stage('Docker Build') {
