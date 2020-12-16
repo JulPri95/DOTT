@@ -16,21 +16,29 @@ pipeline {
                 }
             }
         }
-        stage('Docker Build') {
-            environment {
-                PORT_ACTIVE = sh(returnStdout: true, script: 'sudo lsof -i:8000')
-            }
-            when {
-                expression { env.PORT_ACTIVE = null }
-            }
-            steps {
-                sh 'echo "$PORT_ACTIVE"'
-                sh 'sudo docker build -t pym . '
-                sh 'sudo docker run -d -p 8000:8000 pym'
-            }
+       // stage('Docker Build') {
+       //     environment {
+       //         PORT_ACTIVE = sh(returnStdout: true, script: 'sudo lsof -i:8000')
+       //     }
+       //     when {
+       //         expression { env.PORT_ACTIVE = null }
+       //     }
+       //     steps {
+       //         sh 'echo "$PORT_ACTIVE"'
+       //         sh 'sudo docker build -t pym . '
+       //         sh 'sudo docker run -d -p 8000:8000 pym'
+       //     }
         }
         stage('Unit Testing') {
+            environment {
+                PORT_ACTIVE = ' '
+                //PORT_ACTIVE = sh(returnStdout: true, script: 'sudo lsof -i:8000')
+            }
             steps {
+                if (!PORT_ACTIVE?.trim()) {
+                sh 'sudo docker build -t pym . '
+                sh 'sudo docker run -d -p 8000:8000 pym'    
+                }
                 sh 'cd /home/cloud_user/DOTT'
                 sh 'python tests.py'
             }
