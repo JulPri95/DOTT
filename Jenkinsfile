@@ -28,7 +28,7 @@ pipeline {
        //         sh 'sudo docker build -t pym . '
        //         sh 'sudo docker run -d -p 8000:8000 pym'
        //     }
-        }
+       // }
         stage('Unit Testing') {
             environment {
                 PORT_ACTIVE = ' '
