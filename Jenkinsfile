@@ -90,9 +90,13 @@ pipeline {
                             credentialsId: 'organization-key',
                             variable: 'ORGANIZATION')
                         ]) {
+                        try{
                                 sh 'sudo python -m pip install coverage'
                                 sh 'coverage run -m pytest /var/lib/jenkins/workspace/FinalProject/tests.py -v | coverage report | coverage xml'
                                 cat 'coverage.xml'
+                        }
+                        catch (exc) {
+                        }
                                 withSonarQubeEnv('SonarCloud') {
                                 sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.organization=$ORGANIZATION \
                                 -Dsonar.java.binaries=build/classes/java/ \
