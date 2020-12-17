@@ -21,32 +21,39 @@ pipeline {
                 }
             }
         }
-        //Using the sonar scan plug-in, execute SonarCloud testing on the project
-        stage('SonarCloud') {
-            environment {
-             SCANNER_HOME = tool 'SonarQubeScanner'
-             //ORGANIZATION = "julpri95"
-             //PROJECT_NAME = "JulPri95_DOTT"
-            }
+        stage('SonarQube code scan') {
             steps {
                 script {
-                    withCredentials([
-                        string(
-                            credentialsId: 'project-key',
-                            variable: 'PROJECT_NAME'),
-                        string(
-                            credentialsId: 'organization-key',
-                            variable: 'ORGANIZATION')
-                   ]) {
-                    withSonarQubeEnv('SonarCloud') {
-                        sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.organization=$ORGANIZATION \
-                        -Dsonar.java.binaries=build/classes/java/ \
-                        -Dsonar.projectKey=$PROJECT_NAME \
-                        -Dsonar.sources=.'''
-                    }
+                    sonarScanner('category-service')
                 }
             }
         }
+        //Using the sonar scan plug-in, execute SonarCloud testing on the project
+        //stage('SonarCloud') {
+        //    environment {
+        //     SCANNER_HOME = tool 'SonarQubeScanner'
+             //ORGANIZATION = "julpri95"
+             //PROJECT_NAME = "JulPri95_DOTT"
+        //    }
+        //    steps {
+        //        script {
+        //            withCredentials([
+        //                string(
+        //                    credentialsId: 'project-key',
+        //                    variable: 'PROJECT_NAME'),
+        //                string(
+        //                    credentialsId: 'organization-key',
+        //                    variable: 'ORGANIZATION')
+        //           ]) {
+        //            withSonarQubeEnv('SonarCloud') {
+        //                sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.organization=$ORGANIZATION \
+        //                -Dsonar.java.binaries=build/classes/java/ \
+        //                -Dsonar.projectKey=$PROJECT_NAME \
+        //                -Dsonar.sources=.'''
+        //            }
+        //        }
+        //    }
+        //}
         //Run the docker image in port 8000 if it is free, otherwise skip this step. Using the 'try/catch' method
         //stage('Docker Run') {
         //    steps {
