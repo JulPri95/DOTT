@@ -96,7 +96,7 @@ pipeline {
                         }
                         catch (exc) {
                         }
-                                cat 'coverage.xml'
+                                sh 'cat 'coverage.xml''
                                 withSonarQubeEnv('SonarCloud') {
                                 sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.organization=$ORGANIZATION \
                                 -Dsonar.java.binaries=build/classes/java/ \
