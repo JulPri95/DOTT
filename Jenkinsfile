@@ -44,9 +44,9 @@ pipeline {
         //                 "$ORGANIZATION " //+
                             // Additionally needed when using the branch plugin (e.g. on sonarcloud.io)
                          //"-Dsonar.branch.name=$BRANCH_NAME -Dsonar.branch.target=master"
-                 }
-            }
-        }
+        //         }
+        //    }
+        //}
         //Using the sonar scan plug-in, execute SonarCloud testing on the project
         stage('SonarCloud') {
             environment {
