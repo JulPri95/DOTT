@@ -91,7 +91,7 @@ pipeline {
                         ]) {
                     sh 'sudo python -m pip install coverage'
                     sh 'coverage run -m pytest /home/cloud_user/DOTT/tests.py -v | coverage report | coverage xml'
-                    cat 'coverage.xml;
+                    cat 'coverage.xml'
                     withSonarQubeEnv('SonarCloud') {
                         sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.organization=$ORGANIZATION \
                         -Dsonar.java.binaries=build/classes/java/ \
