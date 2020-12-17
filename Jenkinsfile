@@ -4,29 +4,7 @@ pipeline {
         //Build the Dockerfile image if it doesn't already exist using the 'try/catch' method
         stage( 'Docker Image Build') {
             steps {
-                script {
-                    try {
-                       sh 'sudo docker image inspect pym:latest'
-                    }
-                    catch (exc) {
-                        sh 'echo "Image does not exist yet"'
-                        sh 'sudo docker build -t pym .'
-                    }
-                }
-            }
-        }
-        //Run the docker image in port 8000 if it is free, otherwise skip this step. Using the 'try/catch' method
-        stage('Docker Run') {
-            steps {
-                script {
-                    try {
-                        sh 'sudo lsof -i:8000'
-                    }
-                    catch (exc) {
-                        sh 'echo "Port 8000 is free, image will be run"'
-                        sh 'sudo docker run -d -p 8000:8000 pym'
-                    }
-                }   
+                 sh 'sudo docker build -t pym .'
             }
         }
         //Run the python file 'tests' to perform the Unit Testing. If it fails, consider the stage a success anyway and move on to next stage
@@ -59,5 +37,19 @@ pipeline {
                 }
             }
         }
+        //Run the docker image in port 8000 if it is free, otherwise skip this step. Using the 'try/catch' method
+        //stage('Docker Run') {
+        //    steps {
+        //        script {
+        //            try {
+        //                sh 'sudo lsof -i:8000'
+        //            }
+        //            catch (exc) {
+        //                sh 'echo "Port 8000 is free, image will be run"'
+        //                sh 'sudo docker run -d -p 8000:8000 pym'
+        //            }
+        //        }   
+        //    }
+        //}
     }
 }
