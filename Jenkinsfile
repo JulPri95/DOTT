@@ -12,7 +12,6 @@ pipeline {
                         sh 'echo "Image does not exist yet"'
                         sh 'sudo docker build -t pym .'
                     }
-                    sh 'echo "The image already exists"'
                 }
             }
         }
@@ -27,7 +26,6 @@ pipeline {
                         sh 'echo "Port 8000 is free, image will be run"'
                         sh 'sudo docker run -d -p 8000:8000 pym'
                     }
-                    sh 'echo "The image is already running in port 8000"'
                 }   
             }
         }
