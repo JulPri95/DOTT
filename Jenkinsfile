@@ -70,8 +70,8 @@ pipeline {
                         -Dsonar.projectKey=$PROJECT_NAME \
                         -Dsonar.sources=.'''
                     }
-                }
-            }
+               }
+           }
         }
         stage('Coverage') {
             environment {
