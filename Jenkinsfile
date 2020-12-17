@@ -33,10 +33,13 @@ pipeline {
                     withCredentials([
                         string(
                             credentialsId: 'project-key',
-                            variable: 'PROJECT_NAME')
+                            variable: 'PROJECT_NAME'),
+                        string(
+                            credentialsId: 'organization-key',
+                            variable: 'ORGANIZATION')
                    ]) {
                     withSonarQubeEnv('SonarCloud') {
-                        sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.organization=julpri95 \
+                        sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.organization=ORGANIZATION \
                         -Dsonar.java.binaries=build/classes/java/ \
                         -Dsonar.projectKey=PROJECT_NAME \
                         -Dsonar.sources=.'''
