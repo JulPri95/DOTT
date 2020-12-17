@@ -90,8 +90,9 @@ pipeline {
                             credentialsId: 'organization-key',
                             variable: 'ORGANIZATION')
                         ]) {
+                        sh 'sudo apt install python3-pip'
+                        sh 'sudo python3 -m pip install coverage'
                         try{
-                                sh 'sudo python -m pip install coverage'
                                 sh 'coverage run -m pytest /home/cloud_user/DOTT/tests.py -v | coverage report | coverage xml'
                         }
                         catch (exc) {
