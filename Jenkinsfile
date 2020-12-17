@@ -1,3 +1,5 @@
+@Library('github.com/triologygmbh/jenkinsfile@ad12c8a9') _
+
 pipeline {
     agent any
     stages {
@@ -28,49 +30,49 @@ pipeline {
         //        }
         //    }
         //}
-        stage('Statical Code Analysis') {
-            agent { label 'docker' } // Require a build executor with docker
-            environment {
-             SCANNER_HOME = tool 'SonarQubeScanner'
-             //ORGANIZATION = "julpri95"
-             //PROJECT_NAME = "JulPri95_DOTT"
-            }
-            steps {
-                 withSonarQubeEnv('sonarcloud.io-cloudogu') {
-                     mvn "$SONAR_MAVEN_GOAL -Dsonar.host.url=$SonarQubeScanner -Dsonar.projectkey=$PROJECT_NAME " +
-                            // Here, we could define e.g. sonar.organization, needed for sonarcloud.io
-                         "$ORGANIZATION " //+
-                            // Additionally needed when using the branch plugin (e.g. on sonarcloud.io)
-                         //"-Dsonar.branch.name=$BRANCH_NAME -Dsonar.branch.target=master"
-                 }
-            }
-        }
-        //Using the sonar scan plug-in, execute SonarCloud testing on the project
-        //stage('SonarCloud') {
+        //stage('Statical Code Analysis') {
+        //    agent { label 'docker' } // Require a build executor with docker
         //    environment {
         //     SCANNER_HOME = tool 'SonarQubeScanner'
              //ORGANIZATION = "julpri95"
              //PROJECT_NAME = "JulPri95_DOTT"
         //    }
         //    steps {
-        //        script {
-        //            withCredentials([
-        //                string(
-        //                    credentialsId: 'project-key',
-        //                    variable: 'PROJECT_NAME'),
-        //                string(
-        //                    credentialsId: 'organization-key',
-        //                    variable: 'ORGANIZATION')
-        //           ]) {
-        //            withSonarQubeEnv('SonarCloud') {
-        //                sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.organization=$ORGANIZATION \
-        //                -Dsonar.java.binaries=build/classes/java/ \
-        //                -Dsonar.projectKey=$PROJECT_NAME \
-        //                -Dsonar.sources=.'''
-        //            }
-        //        }
-        //    }
-        //}
+        //         withSonarQubeEnv('sonarcloud.io-cloudogu') {
+        //             mvn "$SONAR_MAVEN_GOAL -Dsonar.host.url=$SonarQubeScanner -Dsonar.projectkey=$PROJECT_NAME " +
+                            // Here, we could define e.g. sonar.organization, needed for sonarcloud.io
+        //                 "$ORGANIZATION " //+
+                            // Additionally needed when using the branch plugin (e.g. on sonarcloud.io)
+                         //"-Dsonar.branch.name=$BRANCH_NAME -Dsonar.branch.target=master"
+                 }
+            }
+        }
+        //Using the sonar scan plug-in, execute SonarCloud testing on the project
+        stage('SonarCloud') {
+            environment {
+             SCANNER_HOME = tool 'SonarQubeScanner'
+             //ORGANIZATION = "julpri95"
+             //PROJECT_NAME = "JulPri95_DOTT"
+            }
+            steps {
+                script {
+                    withCredentials([
+                        string(
+                            credentialsId: 'project-key',
+                            variable: 'PROJECT_NAME'),
+                        string(
+                            credentialsId: 'organization-key',
+                            variable: 'ORGANIZATION')
+                   ]) {
+                    withSonarQubeEnv('SonarCloud') {
+                        sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.organization=$ORGANIZATION \
+                        -Dsonar.java.binaries=build/classes/java/ \
+                        -Dsonar.projectKey=$PROJECT_NAME \
+                        -Dsonar.sources=.'''
+                    }
+                }
+            }
+        }
         //Run the docker image in port 8000 if it is free, otherwise skip this step. Using the 'try/catch' method
         //stage('Docker Run') {
         //    steps {
