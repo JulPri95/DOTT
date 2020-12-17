@@ -29,11 +29,18 @@ pipeline {
              //PROJECT_NAME = "JulPri95_DOTT"
             }
             steps {
-                withSonarQubeEnv('SonarCloud') {
-                    sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.organization=julpri95 \
-                    -Dsonar.java.binaries=build/classes/java/ \
-                    -Dsonar.projectKey=JulPri95_DOTT \
-                    -Dsonar.sources=.'''
+                script {
+                    withCredentials([
+                        string(
+                            credentialsId: 'project-key',
+                            variable: 'PROJECT_NAME')
+                   ]) {
+                    withSonarQubeEnv('SonarCloud') {
+                        sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.organization=julpri95 \
+                        -Dsonar.java.binaries=build/classes/java/ \
+                        -Dsonar.projectKey=PROJECT_NAME \
+                        -Dsonar.sources=.'''
+                    }
                 }
             }
         }
