@@ -86,5 +86,5 @@ nb-configuration.xml
 ##############################
 ## Python
 ##############################
-.coverage
-coverage.xml
+#.coverage
+#coverage.xml
