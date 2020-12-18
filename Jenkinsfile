@@ -1,5 +1,3 @@
-@Library('github.com/triologygmbh/jenkinsfile@ad12c8a9') _
-
 pipeline {
     agent any
     stages {
@@ -101,8 +99,7 @@ pipeline {
                                 sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.organization=$ORGANIZATION \
                                 -Dsonar.java.binaries=build/classes/java/ \
                                 -Dsonar.projectKey=$PROJECT_NAME \
-                                -Dsonar.tests=tests.py \
-                                -Dsonar.python.coverage.reportPaths=coverage.xml'''
+                                -Dsonar.python.coverage.reportPaths'''
                                 //-Dsonar.sources=api.py,convert.py \
                                 //-Dsonar.tests=tests.py \
                    }
