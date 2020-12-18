@@ -102,6 +102,7 @@ pipeline {
                                 -Dsonar.python.coverage.reportPaths=$WORKSPACE/coverage.xml'''
                                 //-Dsonar.sources=api.py,convert.py \
                                 //-Dsonar.tests=tests.py \
+                        }
                    }
                 }
             }
