@@ -109,17 +109,18 @@ pipeline {
         }
         //Run the docker image in port 8000 if it is free, otherwise skip this step. Using the 'try/catch' method
         stage('Docker Run') {
-            //environment {
+            environment {
                 //CONTAINER_ID = sh(returnStdout: true, script: 'docker ps | grep pym | awk '{ print $1 }'')
-            //}
+                CONTAINER_ID = sh(script: 'docker ps | grep pym | awk "{ print $1 }"', returnStdout: true).trim()
+            }
             steps {
                 script {
                     //CONTAINER_ID = sh(returnStdout: true, script: 'docker ps | grep pym | awk '{ print $1 }'')
                     try {
-                        CONTAINER_ID = sh(script: 'docker ps | grep pym | awk "{ print $1 }"', returnStdout: true).trim()
+                        //CONTAINER_ID = sh(script: 'docker ps | grep pym | awk "{ print $1 }"', returnStdout: true).trim()
                         //sh 'docker rm -f $CONTAINER_ID'
                         //sh 'docker run -d -p 8000:8000 pym'
-                        sh 'echo $CONTAINER_ID'
+                        sh 'echo "CONTAINER_ID = $CONTAINER_ID"'
                     }
                     catch (exc) {
                         //sh 'echo "Docker image Pym is not running; will run now"'
