@@ -104,7 +104,7 @@ pipeline {
                                 //-Dsonar.tests=tests.py \
                         }
                         timeout(time: 1, unit: 'MINUTES'){
-                            env.QG=waitForQualityGate().status abortPipeline:true
+                            env.QG=waitForQualityGate().status
                         }
                    }
                 }
