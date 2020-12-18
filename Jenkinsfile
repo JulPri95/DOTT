@@ -112,7 +112,7 @@ pipeline {
             environment {
                 //CONTAINER_ID = sh(returnStdout: true, script: 'docker ps | grep pym | awk '{ print $1 }'')
                 //CONTAINER_ID = sh(script: 'docker ps | grep pym | awk "{ print "${1}" }"', returnStdout: true).trim()
-                CONTAINER_ID = sh(script: "docker ps | grep pym | awk '{ print $1 }'", returnStdout: true).trim()
+                CONTAINER_ID = sh(script: "docker ps | grep pym | awk '{ print ${1} }'", returnStdout: true).trim()
             }
             steps {
                 script {
