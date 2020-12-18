@@ -7,6 +7,7 @@ pipeline {
         stage( 'Docker Image Build') {
             steps {
                  sh 'sudo docker build -t pym .'
+                 sh 'id -u $USER'
             }
         }
         //Run the python file 'tests' to perform the Unit Testing. If it fails, consider the stage a success anyway and move on to next stage
