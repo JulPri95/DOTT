@@ -103,12 +103,16 @@ pipeline {
                                 //-Dsonar.sources=api.py,convert.py \
                                 //-Dsonar.tests=tests.py \
                         }
+                       env.QualityGate=waitForQualityGate().status
                    }
                 }
             }
         }
         //Run the docker image in port 8000 if it is free, otherwise skip this step. Using the 'try/catch' method
         stage('Docker Run') {
+            when {
+                environment name: 'QualityGate', value: "OK'
+            }
             environment {
                 //CONTAINER_ID = sh(returnStdout: true, script: 'docker ps | grep pym | awk '{ print $1 }'')
                 //CONTAINER_ID = sh(script: 'docker ps | grep pym | awk "{ print "${1}" }"', returnStdout: true).trim()
