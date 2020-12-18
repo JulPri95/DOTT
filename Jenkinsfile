@@ -114,8 +114,9 @@ pipeline {
             //}
             steps {
                 script {
-                    CONTAINER_ID = sh(returnStdout: true, script: 'docker ps | grep pym | awk '{ print $1 }'')
+                    //CONTAINER_ID = sh(returnStdout: true, script: 'docker ps | grep pym | awk '{ print $1 }'')
                     try {
+                        CONTAINER_ID = sh(returnStdout: true, script: 'docker ps | grep pym | awk '{ print $1 }'')
                         sh 'docker rm -f $CONTAINER_ID'
                         sh 'docker run -d -p 8000:8000 pym'
                     }
