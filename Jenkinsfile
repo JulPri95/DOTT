@@ -93,7 +93,7 @@ pipeline {
                         sh 'cd $WORKSPACE/'
                         sh 'sudo apt install python3-pip'
                         sh 'sudo python3 -m pip install coverage'
-                        sh 'sudo pip install pytest'
+                        sh 'sudo python3 -m pip install pytest'
                         sh 'coverage run -m pytest ./tests.py -v | coverage report'
                         //| coverage xml'
                         sh 'ls'
