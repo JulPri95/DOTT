@@ -89,10 +89,10 @@ pipeline {
                             variable: 'ORGANIZATION')
                         ]) {
                         sh 'cd $WORKSPACE/'
-                        sh 'sudo apt install python3-pip'
-                        sh 'sudo python3 -m pip install coverage'
-                        sh 'sudo python3 -m pip install pytest'
-                        sh 'sudo coverage run -m pytest /var/lib/jenkins/workspace/FinalProject/tests.py -v | coverage report | coverage xml'
+                        sh 'apt install python3-pip'
+                        sh 'python3 -m pip install coverage'
+                        sh 'python3 -m pip install pytest'
+                        sh 'coverage run -m pytest /var/lib/jenkins/workspace/FinalProject/tests.py -v | coverage report | coverage xml'
                         sh 'ls'
                         sh 'pwd'
                         withSonarQubeEnv('SonarCloud') {
