@@ -93,18 +93,14 @@ pipeline {
                         sh 'cd $WORKSPACE/'
                         sh 'sudo apt install python3-pip'
                         sh 'sudo python3 -m pip install coverage'
-                        try{
-                                sh 'coverage run -m pytest tests.py -v | coverage report | coverage xml'
-                        }
-                        catch (exc) {
-                        }
-                                sh 'cat coverage.xml'
-                                withSonarQubeEnv('SonarCloud') {
+                        //sh 'coverage run -m pytest tests.py -v | coverage report | coverage xml'
+                        sh 'ls'
+                        sh 'pwd'
+                        withSonarQubeEnv('SonarCloud') {
                                 sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.organization=$ORGANIZATION \
                                 -Dsonar.java.binaries=build/classes/java/ \
                                 -Dsonar.projectKey=$PROJECT_NAME \
                                 -Dsonar.python.coverage.reportPaths'''
-                                }
                    }
                 }
             }
