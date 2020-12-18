@@ -101,7 +101,9 @@ pipeline {
                                 sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.organization=$ORGANIZATION \
                                 -Dsonar.java.binaries=build/classes/java/ \
                                 -Dsonar.projectKey=$PROJECT_NAME \
-                                -Dsonar.python.coverage.reportPath'''
+                                -Dsonar.sources=api.py,convert.py \
+                                -Dsonar.tests=tests.py
+                                -Dsonar.python.coverage.reportPaths'''
                    }
                 }
             }
