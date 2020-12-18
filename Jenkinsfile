@@ -1,10 +1,12 @@
+  
 pipeline {
     agent any
     stages {
-        //Build the Dockerfile image if it doesn't already exist using the 'try/catch' method
+        //Build the Dockerfile image
         stage( 'Docker Image Build') {
             steps {
-                 sh 'docker build -t pym .'
+                //Build the Docker image with the new commits
+                sh 'docker build -t pym .'
             }
         }
         //Run the python file 'tests' to perform the Unit Testing. If it fails, consider the stage a success anyway and move on to next stage
@@ -12,8 +14,13 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh 'cd /home/cloud_user/DOTT'
-                        sh 'python tests.py'
+                        //Move to the correct directory
+                        sh 'cd /$WORKSPACE/'
+                        //Make sure all of the necessary libraries and plug-ins are installed
+                        sh 'sudo apt install python3-pip'
+                        sh 'sudo python3 -m pip install pytest'
+                        //Execute test in verbose format
+                        sh 'pytest tests.py -v'
                     }
                     catch (exc) {
                             echo 'Unit tests failed'
@@ -21,65 +28,17 @@ pipeline {
                 }
             }
         }
-        //stage('SonarQube code scan') {
-        //    steps {
-        //        script {
-        //            sonarScanner('category-service')
-        //        }
-        //    }
-        //}
-        //stage('Statical Code Analysis') {
-        //    agent { label 'docker' } // Require a build executor with docker
-        //    environment {
-        //     SCANNER_HOME = tool 'SonarQubeScanner'
-             //ORGANIZATION = "julpri95"
-             //PROJECT_NAME = "JulPri95_DOTT"
-        //    }
-        //    steps {
-        //         withSonarQubeEnv('sonarcloud.io-cloudogu') {
-        //             mvn "$SONAR_MAVEN_GOAL -Dsonar.host.url=$SonarQubeScanner -Dsonar.projectkey=$PROJECT_NAME " +
-                            // Here, we could define e.g. sonar.organization, needed for sonarcloud.io
-        //                 "$ORGANIZATION " //+
-                            // Additionally needed when using the branch plugin (e.g. on sonarcloud.io)
-                         //"-Dsonar.branch.name=$BRANCH_NAME -Dsonar.branch.target=master"
-        //         }
-        //    }
-        //}
-        //Using the sonar scan plug-in, execute SonarCloud testing on the project
-        stage('SonarCloud') {
+        //Using the sonar scan plug-in, execute SonarCloud analysis on the project, including the coverage which is createad in this step.
+        //Return 'Ok' if the code passes the Quality Gate and move on to Docker Build. Otherwise, abort because of timeout and don't run.
+        stage('SonarScan w/ Coverage') {
             environment {
+             //Set variable for the SonarQube Sanner server being run on Jenkins through a plug-in
              SCANNER_HOME = tool 'SonarQubeScanner'
-             //ORGANIZATION = "julpri95"
-             //PROJECT_NAME = "JulPri95_DOTT"
             }
             steps {
                 script {
-                    withCredentials([
-                        string(
-                            credentialsId: 'project-key',
-                            variable: 'PROJECT_NAME'),
-                        string(
-                            credentialsId: 'organization-key',
-                            variable: 'ORGANIZATION')
-                   ]) {
-                        withSonarQubeEnv('SonarCloud') {
-                            sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.organization=$ORGANIZATION \
-                            -Dsonar.java.binaries=build/classes/java/ \
-                            -Dsonar.projectKey=$PROJECT_NAME \
-                            -Dsonar.sources=.'''
-                        }
-                   }
-               }
-           }
-        }
-        stage('Coverage') {
-            environment {
-             SCANNER_HOME = tool 'SonarQubeScanner'
-             //ORGANIZATION = "julpri95"
-             //PROJECT_NAME = "JulPri95_DOTT"
-            }
-            steps {
-                script {
+                    //Call the credentials that are saved in the Jenkins plug-in in encrypted formatto avoid including sensitive 
+                    //information in the code
                     withCredentials([
                         string(
                             credentialsId: 'project-key',
@@ -88,21 +47,20 @@ pipeline {
                             credentialsId: 'organization-key',
                             variable: 'ORGANIZATION')
                         ]) {
-                        sh 'cd $WORKSPACE/'
-                        sh 'sudo apt install python3-pip'
+                        //Make sure all of the necessary libraries and programs are installed
                         sh 'sudo python3 -m pip install coverage'
-                        sh 'sudo python3 -m pip install pytest'
+                        //Run a coverage command for the pytest and pipe it into a coverage report. Pipe that report into an xml which
+                        //will be interpreted by SonarCloud
                         sh 'coverage run -m pytest /var/lib/jenkins/workspace/FinalProject/tests.py -v | coverage report | coverage xml'
-                        sh 'ls'
-                        sh 'pwd'
+                        //Call SonarCloud with the credentials in order to connect to the right project, and with the correct path for the
+                        //coverage report to be imported and interpreted
                         withSonarQubeEnv('SonarCloud') {
                                 sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.organization=$ORGANIZATION \
                                 -Dsonar.java.binaries=build/classes/java/ \
                                 -Dsonar.projectKey=$PROJECT_NAME \
                                 -Dsonar.python.coverage.reportPaths=$WORKSPACE/coverage.xml'''
-                                //-Dsonar.sources=api.py,convert.py \
-                                //-Dsonar.tests=tests.py \
                         }
+                        //Set a timeout for the Quality gate and run the function inside a variable to use it in the next stage
                         timeout(time: 1, unit: 'MINUTES'){
                             env.QG=waitForQualityGate().status
                         }
@@ -110,26 +68,27 @@ pipeline {
                 }
             }
         }
-        //Run the docker image in port 8000 if it is free, otherwise skip this step. Using the 'try/catch' method
+        //Run the docker image in port 8000 if the Quality Gate passes, if the container already has an active instance, 
+        //remove it, using try/catch method
         stage('Docker Run') {
             when {
+                //Only run if Quality Gate is Ok
                 environment name: 'QG', value: 'OK'
             }
             environment {
-                //CONTAINER_ID = sh(returnStdout: true, script: 'docker ps | grep pym | awk '{ print $1 }'')
-                //CONTAINER_ID = sh(script: 'docker ps | grep pym | awk "{ print "${1}" }"', returnStdout: true).trim()
+                //Assign a variable for the ID of the active container with the same command line as the one that was built
                 CONTAINER_ID = sh(script: "docker ps | grep ash | awk '{ print \$1 }'", returnStdout: true).trim()
             }
             steps {
                 script {
-                    //CONTAINER_ID = sh(returnStdout: true, script: 'docker ps | grep pym | awk '{ print $1 }'')
                     try {
-                        //CONTAINER_ID = sh(script: 'docker ps | grep pym | awk "{ print $1 }"', returnStdout: true).trim()
+                        //Remove the active container and run the new image. If there is no active container this step fail and go to catch
                         sh 'echo "CONTAINER_ID = $CONTAINER_ID"'
                         sh 'docker rm -f $CONTAINER_ID'
                         sh 'docker run -d -p 8000:8000 pym'
                     }
                     catch (exc) {
+                        //Run the new image
                         sh 'echo "Docker image Pym is not running; will run now"'
                         sh 'sudo docker run -d -p 8000:8000 pym'
                     }
