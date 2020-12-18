@@ -7,7 +7,6 @@ pipeline {
         stage( 'Docker Image Build') {
             steps {
                  sh 'sudo docker build -t pym .'
-                 echo "$USER"
             }
         }
         //Run the python file 'tests' to perform the Unit Testing. If it fails, consider the stage a success anyway and move on to next stage
@@ -95,7 +94,7 @@ pipeline {
                         sh 'sudo apt install python3-pip'
                         sh 'sudo python3 -m pip install coverage'
                         try{
-                                sh 'coverage run -m pytest tests.py -v | coverage report | coverage xml'
+                                sh 'coverage run -m pytest /var/lib/jenkins/workspace/FinalProject/tests.py -v | coverage report | coverage xml'
                         }
                         catch (exc) {
                         }
