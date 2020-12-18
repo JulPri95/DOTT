@@ -90,11 +90,11 @@ pipeline {
                             credentialsId: 'organization-key',
                             variable: 'ORGANIZATION')
                         ]) {
-                        sh 'cd /home/cloud_user/DOTT/'
+                        sh 'cd /var/lib/jenkins/workspace/FinalProject/'
                         sh 'sudo apt install python3-pip'
                         sh 'sudo python3 -m pip install coverage'
                         try{
-                                sh 'coverage run -m pytest /home/cloud_user/DOTT/tests.py -v | coverage report | coverage xml'
+                                sh 'coverage run -m pytest tests.py -v | coverage report | coverage xml'
                         }
                         catch (exc) {
                         }
