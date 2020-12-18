@@ -107,19 +107,23 @@ pipeline {
             }
         }
         //Run the docker image in port 8000 if it is free, otherwise skip this step. Using the 'try/catch' method
-        //stage('Docker Run') {
-        //    steps {
-        //        script {
-        //            try {
-        //                sh 'sudo lsof -i:8000'
-        //            }
-        //            catch (exc) {
-        //                sh 'echo "Port 8000 is free, image will be run"'
-        //                sh 'sudo docker run -d -p 8000:8000 pym'
-        //            }
-        //        }   
-        //    }
-        //}
+        stage('Docker Run') {
+            environment {
+                CONTAINER_ID = sh(returnStdout: true, script: 'docker ps | grep pym | awk '{ print $1 }'')
+            }
+            steps {
+                script {
+                    try {
+                        sh 'docker rm -f $CONTAINER_ID'
+                        sh 'docker run -d -p 8000:8000 pym'
+                    }
+                    catch (exc) {
+                        sh 'echo "Docker image Pym is not running; will run now"'
+                        sh 'sudo docker run -d -p 8000:8000 pym'
+                    }
+                }   
+            }
+        }
     }
 }
 
