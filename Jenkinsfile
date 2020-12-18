@@ -61,7 +61,7 @@ pipeline {
                                 -Dsonar.python.coverage.reportPaths=$WORKSPACE/coverage.xml'''
                         }
                         //Set a timeout for the Quality gate and run the function inside a variable to use it in the next stage
-                        timeout(time: 1, unit: 'MINUTES'){
+                        timeout(time: 2, unit: 'MINUTES'){
                             env.QG=waitForQualityGate().status
                         }
                    }
