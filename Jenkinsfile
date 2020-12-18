@@ -103,7 +103,7 @@ pipeline {
                                 //-Dsonar.sources=api.py,convert.py \
                                 //-Dsonar.tests=tests.py \
                         }
-                       env.QualityGate=waitForQualityGate().status
+                       env.QG=waitForQualityGate().status
                    }
                 }
             }
