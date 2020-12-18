@@ -90,6 +90,7 @@ pipeline {
                             credentialsId: 'organization-key',
                             variable: 'ORGANIZATION')
                         ]) {
+                        sh 'cd /home/cloud_user/DOTT/'
                         sh 'sudo apt install python3-pip'
                         sh 'sudo python3 -m pip install coverage'
                         try{
@@ -102,7 +103,7 @@ pipeline {
                                 sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.organization=$ORGANIZATION \
                                 -Dsonar.java.binaries=build/classes/java/ \
                                 -Dsonar.projectKey=$PROJECT_NAME \
-                                -Dsonar.python.coverage.reportPaths=**/*.xml'''
+                                -Dsonar.python.coverage.reportPaths'''
                                 }
                    }
                 }
